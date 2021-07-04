@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity() {
     val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
 
     private var isGatheringMotionAnimating: Boolean = false
+    private var isCurationMotionAnimating: Boolean = false
 
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
@@ -40,7 +41,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initMotionLayoutListener() {
-        binding.gatheringDigitalThingsLayout.setTransitionListener(object :
+        binding.gatheringDigitalThingsMotionLayout.setTransitionListener(object :
             MotionLayout.TransitionListener {
             override fun onTransitionStarted(p0: MotionLayout?, p1: Int, p2: Int) {
                 isGatheringMotionAnimating = true
@@ -51,6 +52,28 @@ class MainActivity : AppCompatActivity() {
 
             override fun onTransitionCompleted(p0: MotionLayout?, p1: Int) {
                 isGatheringMotionAnimating = false
+            }
+
+            override fun onTransitionTrigger(p0: MotionLayout?, p1: Int, p2: Boolean, p3: Float) {
+            }
+
+        })
+
+        binding.curationAnimationMotionLayout.setTransitionListener(object :
+            MotionLayout.TransitionListener {
+            override fun onTransitionStarted(p0: MotionLayout?, p1: Int, p2: Int) {
+            }
+
+            override fun onTransitionChange(p0: MotionLayout?, p1: Int, p2: Int, p3: Float) {
+            }
+
+            override fun onTransitionCompleted(p0: MotionLayout?, currentId: Int) {
+                when(currentId) {
+                    R.id.curation_animation_end1 -> {
+                        binding.curationAnimationMotionLayout.setTransition(R.id.curation_animation_start2, R.id.curation_animation_end2)
+                        binding.curationAnimationMotionLayout.transitionToEnd()
+                    }
+                }
             }
 
             override fun onTransitionTrigger(p0: MotionLayout?, p1: Int, p2: Boolean, p3: Float) {
@@ -68,24 +91,24 @@ class MainActivity : AppCompatActivity() {
             if (scrolledValue > 150f.dpToPx(this@MainActivity).toInt()) {
                 if (isGatheringMotionAnimating.not()) {
                     binding.gatheringDigitalThingsBackgroundMotionLayout.transitionToEnd()
-                    binding.gatheringDigitalThingsLayout.transitionToEnd()
+                    binding.gatheringDigitalThingsMotionLayout.transitionToEnd()
                     binding.buttonShownMotionLayout.transitionToEnd()
                 }
             } else {
                 if (isGatheringMotionAnimating.not()) {
                     binding.gatheringDigitalThingsBackgroundMotionLayout.transitionToStart()
-                    binding.gatheringDigitalThingsLayout.transitionToStart()
+                    binding.gatheringDigitalThingsMotionLayout.transitionToStart()
                     binding.buttonShownMotionLayout.transitionToStart()
                 }
             }
 
-//            if (scrolledValue > binding.scrollView.height) {
-//                if (isCurationMotionAnimating.not()) {
-//                    binding.curationAnimationMotionLayout.setTransition(R.id.curation_animation_start1, R.id.curation_animation_end1)
-//                    binding.curationAnimationMotionLayout.transitionToEnd()
-//                    isCurationMotionAnimating = true
-//                }
-//            }
+            if (scrolledValue > binding.scrollView.height) {
+                if (isCurationMotionAnimating.not()) {
+                    binding.curationAnimationMotionLayout.setTransition(R.id.curation_animation_start1, R.id.curation_animation_end1)
+                    binding.curationAnimationMotionLayout.transitionToEnd()
+                    isCurationMotionAnimating = true
+                }
+            }
         }
     }
 
